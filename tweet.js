@@ -9,7 +9,8 @@ async function biword() {
 }
 
 async function tweet() {
-    return (await biword()).replace(/bi/i, 'straight');
+    const word = await biword();
+    return `it’s ${word} not ${word.replace(/bi/i, 'straight')}`;
 }
 
 module.exports = tweet;
