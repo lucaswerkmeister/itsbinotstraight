@@ -31,13 +31,16 @@ async function sendTweet() {
         access_token_secret: env.TWITTER_TS,
     });
 
+    const result = await client.post('statuses/update', { status: await tweet() });
+    console.log(`https://twitter.com/status/status/${result.id_str}`);
+}
+
+(async function() {
     try {
-        const result = await client.post('statuses/update', { status: await tweet() });
-        console.log(`https://twitter.com/status/status/${result.id_str}`);
+        await readEnvFile('.env');
+        await sendTweet();
     } catch (e) {
         console.error(e);
         process.exitCode = 1;
     }
-}
-
-readEnvFile('.env').then(sendTweet);
+})();
