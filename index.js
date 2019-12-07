@@ -1,5 +1,6 @@
 const process = require('process')
 const Twitter = require('twitter');
+const tweet = require('./tweet');
 
 const client = new Twitter({
     consumer_key: process.env.TWITTER_CK,
@@ -10,8 +11,8 @@ const client = new Twitter({
 
 async function sendTweet() {
     try {
-        const tweet = await client.post('statuses/update', { status: 'it’s bi not straight' });
-        console.log(tweet);
+        const result = await client.post('statuses/update', { status: await tweet() });
+        console.log(`https://twitter.com/status/status/${result.id_str}`);
     } catch (e) {
         console.error(e);
         process.exitCode = 1;
