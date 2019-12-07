@@ -15,10 +15,20 @@ async function biword() {
     return biwords[index];
 }
 
+function replacement(biword) {
+    const [_, bi, nextLetter, rest] = biword.match(/(^bi)(.)(.*$)/i),
+          chanceForConsonant = /[aeiouy]/.test(nextLetter) ? 0.7 : 0.3,
+          chooseConsonant = Math.random() < chanceForConsonant;
+    let replacement = replacements[bi][chooseConsonant ? 0 : 1] + nextLetter + rest
+    for (const regexp of [/(^straight)t/i, /(^hetero)o/i]) {
+        replacement = replacement.replace(regexp, (_, part, doubledLetter) => part);
+    }
+    return replacement;
+}
+
 async function tweet() {
-    const word = await biword(),
-          replacement = word.replace(/bi/i, match => replacements[match][0]);
-    return `it’s ${word} not ${replacement}`;
+    const word = await biword();
+    return `it’s ${word} not ${replacement(word)}`;
 }
 
 module.exports = tweet;
