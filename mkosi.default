@@ -1,6 +1,5 @@
 [Distribution]
-Distribution=debian
-Release=buster
+Distribution=arch
 
 [Output]
 Format=directory
@@ -12,4 +11,4 @@ BuildPackages=make
               npm
 WithNetwork=yes
 SourceFileTransfer=copy-all
-Cache=/var/cache/apt/archives/
+Cache=/var/cache/pacman/pkg
