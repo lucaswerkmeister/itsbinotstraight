@@ -1,5 +1,12 @@
 const fs = require('fs').promises;
 
+const replacements = {
+    bi: ['straight', 'hetero'],
+    Bi: ['Straight', 'Hetero'],
+    BI: ['STRAIGHT', 'HETERO'],
+    bI: ['sTrAiGhT', 'hEtErO'],
+};
+
 async function biword() {
     const contents = await fs.readFile('biwords', 'utf8'),
           biwords = contents.split('\n');
@@ -9,8 +16,9 @@ async function biword() {
 }
 
 async function tweet() {
-    const word = await biword();
-    return `it’s ${word} not ${word.replace(/bi/i, 'straight')}`;
+    const word = await biword(),
+          replacement = word.replace(/bi/i, match => replacements[match][0]);
+    return `it’s ${word} not ${replacement}`;
 }
 
 module.exports = tweet;
