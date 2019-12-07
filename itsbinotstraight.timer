@@ -1,0 +1,10 @@
+[Unit]
+Description=Periodically send an “it’s bi not straight” tweet
+
+[Timer]
+OnCalendar=10,22:00 UTC
+OnCalendar=*-09-23 *:00 UTC
+RandomizedDelaySec=30min
+
+[Install]
+WantedBy=timers.target
