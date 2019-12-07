@@ -1,0 +1,15 @@
+[Distribution]
+Distribution=debian
+Release=buster
+
+[Output]
+Format=directory
+Output=itsbinotstraight/
+
+[Packages]
+Packages=nodejs
+BuildPackages=make
+              npm
+WithNetwork=yes
+SourceFileTransfer=copy-all
+Cache=/var/cache/apt/archives/
