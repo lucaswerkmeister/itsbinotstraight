@@ -1,0 +1,15 @@
+#!/bin/bash
+
+case $# in
+    0) cmd=(look bi);;
+    1) cmd=(look -df bi "$1");;
+    *)
+        printf >&2 'Too many arguments!\nUsage: %s [FILE]\n' "$0"
+        exit 1
+        ;;
+esac
+
+"${cmd[@]}" \
+    | grep -v "'s\$" \
+    | grep -v '^..$' \
+           >| biwords
