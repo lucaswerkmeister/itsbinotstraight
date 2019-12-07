@@ -5,4 +5,3 @@ Description=Send an “it’s bi not straight” tweet
 Type=oneshot
 ExecStart=/usr/bin/nodejs index.js
 WorkingDirectory=/usr/local/lib/itsbinotstraight/
-EnvironmentFile=/usr/local/lib/itsbinotstraight/.env
