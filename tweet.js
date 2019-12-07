@@ -26,9 +26,24 @@ function replacement(biword) {
     return replacement;
 }
 
+function phrase(biword) {
+    const chanceForAllCaps = /^\p{Lu}*$/u.test(biword) ? 0.5 : 0,
+          useAllCaps = Math.random() < chanceForAllCaps;
+    if (useAllCaps) {
+        return `IT’S ${biword} NOT ${replacement(biword)}`;
+    } else {
+        return `it’s ${biword} not ${replacement(biword)}`;
+    }
+}
+
 async function tweet() {
     const word = await biword();
-    return `it’s ${word} not ${replacement(word)}`;
+    return phrase(word);
+    if (/^\p{Lu}*$/u.test(word)) {
+        return `IT’S ${word} NOT ${replacement(word)}`;
+    } else {
+        return `it’s ${word} not ${replacement(word)}`;
+    }
 }
 
 module.exports = tweet;
