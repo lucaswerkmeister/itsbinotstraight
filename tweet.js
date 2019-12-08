@@ -23,10 +23,10 @@ async function biword() {
 }
 
 function replacement(biword) {
-    const [_, prefix, bi, nextLetter, rest] = biword.match(/(.*?)(bi)(.)(.*$)/i),
+    const [_, bi, nextLetter] = biword.match(/(bi)(.)/i),
           chanceForConsonant = /[aeiouy]/.test(nextLetter) ? 0.7 : 0.3,
           chooseConsonant = Math.random() < chanceForConsonant;
-    let replacement = prefix + replacements[bi][chooseConsonant ? 0 : 1] + nextLetter + rest
+    let replacement = biword.replace(bi, replacements[bi][chooseConsonant ? 0 : 1]);
     for (const regexp of [/(straight)t/i, /(hetero)o/i]) {
         replacement = replacement.replace(regexp, (_, part, doubledLetter) => part);
     }
