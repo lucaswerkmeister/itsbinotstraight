@@ -1,0 +1,56 @@
+#!/usr/bin/env node
+
+const fs = require('fs').promises;
+const MWBot = require('mwbot');
+
+/** for some reason cmendsortkeyprefix has no effect and we need to check “does it start with bi” ourselves */
+function isBiCategoryMember(categorymember) {
+    let { sortkeyprefix } = categorymember;
+    if (sortkeyprefix === '') { // for short words the sortkeyprefix is empty for some reason
+        sortkeyprefix = categorymember.title;
+    }
+    return /^bi/i.test(sortkeyprefix);
+}
+
+async function loadBiwordsAndWriteTo(fileHandle) {
+    const bot = new MWBot({ apiUrl: 'https://en.wiktionary.org/w/api.php' });
+    let fsPromise = Promise.resolve(),
+        cont = undefined;
+    do {
+        const response = await bot.request({
+            action: 'query',
+            list: 'categorymembers',
+            cmtitle: 'Category:English lemmas',
+            cmprop: 'title|sortkeyprefix',
+            cmnamespace: 0,
+            cmtype: 'page',
+            cmlimit: 'max',
+            cmstartsortkeyprefix: 'BI',
+            cmendsortkeyprefix: 'BJ',
+            formatversion: 2,
+            ...cont,
+        });
+        cont = response['continue'];
+        fsPromise = fsPromise.then(async () => {
+            for (const categorymember of response.query.categorymembers) {
+                if (!isBiCategoryMember(categorymember)) {
+                    break;
+                }
+                await fileHandle.appendFile(`${categorymember.title}\n`, 'utf8');
+            }
+        });
+        if (!isBiCategoryMember(response.query.categorymembers.slice(-1)[0])) {
+            break;
+        }
+    } while (cont);
+    await fsPromise;
+}
+
+(async function() {
+    try {
+        await loadBiwordsAndWriteTo(await fs.open('biwords', 'w'));
+    } catch (e) {
+        console.error(e);
+        process.exitCode = 1;
+    }
+})();
