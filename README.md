@@ -33,7 +33,7 @@ Note that the image must be attached with some profile that allows w+x memory,
 i. e. one with `MemoryDenyWriteExecute=no`,
 which is not the case with the default profile.
 The only standard profile satisfying this condition is the “trusted” one;
-however, you can easily create your own copy of the “default” profile with `MemoryDenyWriteExecute=no`
+however, you can create your own copy of the “default” profile with `MemoryDenyWriteExecute=no`
 by placing an appropriately edited version of `/usr/lib/systemd/portable/profile/default/` below `/etc/systemd/portable/profile/`.
 
 ## License
