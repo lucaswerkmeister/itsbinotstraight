@@ -6,8 +6,10 @@ NPM := npm
 
 prefix := /usr/local
 
+export NODE_ENV
+
 all:
-	$(NPM) install
+	$(NPM) ci
 
 install:
 	$(MKDIR) "$(DESTDIR)$(prefix)/lib/itsbinotstraight"
