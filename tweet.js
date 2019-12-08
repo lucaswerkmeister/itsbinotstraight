@@ -46,11 +46,6 @@ function phrase(biword) {
 async function tweet() {
     const word = await biword();
     return phrase(word);
-    if (/^\p{Lu}*$/u.test(word)) {
-        return `IT’S ${word} NOT ${replacement(word)}`;
-    } else {
-        return `it’s ${word} not ${replacement(word)}`;
-    }
 }
 
 module.exports = tweet;
