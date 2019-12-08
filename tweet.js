@@ -7,6 +7,14 @@ const replacements = {
     BI: ['STRAIGHT', 'HETERO'],
     bI: ['sTrAiGhT', 'hEtErO'],
 };
+const patterns = [
+    // chance that this or one of the preceding patterns will be picked, pattern/phrase, optional conversion for biword and replacement
+    [0.005, 'IT’S 👏 %BIWORD% 👏 NOT 👏 %REPLACEMENT% 👏', (s) => s.toUpperCase()],
+    [0.015, 'IT’S %BIWORD% NOT %REPLACEMENT%', (s) => s.toUpperCase()],
+    [0.04, 'make %BIWORD%, not %REPLACEMENT%', null],
+    [0.1, 'it’s “%BIWORD%”\nnot “%REPLACEMENT%”', null],
+    [1, 'it’s %BIWORD% not %REPLACEMENT%', null],
+];
 let biwords = undefined;
 
 async function loadBiwords() {
@@ -36,13 +44,23 @@ function replacement(biword) {
 }
 
 function phrase(biword) {
-    const chanceForAllCaps = /^\p{Lu}*$/u.test(biword) ? 0.5 : 0,
-          useAllCaps = Math.random() < chanceForAllCaps;
-    if (useAllCaps) {
-        return `IT’S ${biword} NOT ${replacement(biword)}`;
-    } else {
-        return `it’s ${biword} not ${replacement(biword)}`;
+    const sample = Math.random();
+    let pattern, conversion;
+    for (const [chance, pattern_, conversion_] of patterns) {
+        if (sample < chance) {
+            pattern = pattern_;
+            conversion = conversion_;
+            break;
+        }
     }
+    if (pattern === undefined) {
+        throw new Error(`No pattern for sample ${sample}!`);
+    }
+    if (!conversion) {
+        conversion = (s) => s;
+    }
+    return pattern.replace('%BIWORD%', conversion(biword))
+        .replace('%REPLACEMENT%', conversion(replacement(biword)));
 }
 
 async function tweet() {
