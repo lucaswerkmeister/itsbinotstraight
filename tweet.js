@@ -23,13 +23,15 @@ async function biword() {
 }
 
 function replacement(biword) {
-    const [_, bi, nextLetter] = biword.match(/(bi)(.)/i),
+    biword = biword.normalize('NFD'); // ensure that e. g. Bì… can still be matched by regexp below
+    const [_, bi, nextLetter] = biword.match(/(bi)(.?)/i),
           chanceForConsonant = /[aeiouy]/.test(nextLetter) ? 0.7 : 0.3,
           chooseConsonant = Math.random() < chanceForConsonant;
     let replacement = biword.replace(bi, replacements[bi][chooseConsonant ? 0 : 1]);
     for (const regexp of [/(straight)t/i, /(hetero)o/i]) {
         replacement = replacement.replace(regexp, (_, part, doubledLetter) => part);
     }
+    replacement = replacement.normalize('NFC'); // undo NFD normalization above
     return replacement;
 }
 
