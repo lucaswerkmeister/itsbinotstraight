@@ -10,6 +10,7 @@ Run `npm install` to install dependencies.
 `tweet.js` is the meat of the bot, generating the tweet texts.
 If loaded as the main module (i. e. `node tweet.js`),
 it creates one text sample and prints it to standard output.
+(You can also specify a number of lines to generate, e. g. `node tweet.js 25`.)
 
 `index.js` loads credentials from the `.env` file or process environment,
 and sends a single tweet.

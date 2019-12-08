@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const process = require('process');
 
 const replacements = {
     bi: ['straight', 'hetero'],
@@ -6,13 +7,19 @@ const replacements = {
     BI: ['STRAIGHT', 'HETERO'],
     bI: ['sTrAiGhT', 'hEtErO'],
 };
+let biwords = undefined;
 
-async function biword() {
+async function loadBiwords() {
     const contents = await fs.readFile('biwords', 'utf8'),
           biwords = contents.split('\n');
     biwords.pop(); // remove trailing newline
-    const index = Math.floor(Math.random() * biwords.length);
-    return biwords[index];
+    return biwords;
+}
+
+async function biword() {
+    const words = await (biwords || (biwords = loadBiwords())),
+          index = Math.floor(Math.random() * words.length);
+    return words[index];
 }
 
 function replacement(biword) {
@@ -48,6 +55,19 @@ async function tweet() {
 
 module.exports = tweet;
 
+async function main() {
+    let count = 1;
+    if (process.argv.length === 3) {
+        const arg = parseInt(process.argv[2], 10);
+        if (!isNaN(arg)) {
+            count = arg;
+        }
+    }
+    for (let i = 0; i < count; i++) {
+        console.log(await tweet());
+    }
+}
+
 if (require.main === module) {
-    tweet().then(console.log, console.error);
+    main().catch((e) => { console.error(e); processe.exitCode = 1; });
 }
