@@ -4,6 +4,7 @@
   "description": "a twitter bot",
   "main": "index.js",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "twitter": "^1.7.1"
   },
   "devDependencies": {
