@@ -5,11 +5,13 @@
 ```sh
 sudo mkosi -f &&
 sudo systemd-run --pty -p User="$USER" -p AmbientCapabilities=CAP_DAC_READ_SEARCH -p WorkingDirectory="$PWD" -E SSH_AUTH_SOCK="$SSH_AUTH_SOCK" casync make --without=user-names --store=luthien:/var/lib/casync/store/ luthien:/var/lib/portables/itsbinotstraight.caidx itsbinotstraight/ &&
-ssh -t luthien sudo systemctl disable --now itsbinotstraight.timer &&
-ssh -t luthien sudo portablectl detach itsbinotstraight &&
-ssh -t luthien sudo casync extract --store=/var/lib/casync/store/ /var/lib/portables/itsbinotstraight.caidx /var/lib/portables/itsbinotstraight/ &&
-ssh -t luthien sudo portablectl attach --profile default-with-JIT itsbinotstraight &&
-ssh -t luthien sudo systemctl enable --now itsbinotstraight.timer
+ssh -t luthien '
+sudo systemctl disable --now itsbinotstraight.timer &&
+sudo portablectl detach itsbinotstraight &&
+sudo casync extract --store=/var/lib/casync/store/ /var/lib/portables/itsbinotstraight.caidx /var/lib/portables/itsbinotstraight/ &&
+sudo portablectl attach --profile default-with-JIT itsbinotstraight &&
+sudo systemctl enable --now itsbinotstraight.timer
+'
 ```
 
 ## Details
