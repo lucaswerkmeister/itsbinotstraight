@@ -1,3 +1,9 @@
+# deployment
 /.env
-node_modules/
 /itsbinotstraight/
+
+# JS
+node_modules/
+
+# Rust
+/target/
