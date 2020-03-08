@@ -2,6 +2,7 @@ use std::io::BufReader;
 use std::io::BufRead;
 use std::fs::File;
 use rand::seq::IteratorRandom;
+use unicode_normalization::UnicodeNormalization;
 
 fn biword() -> String {
     let file = File::open("biwords").expect("open biwords");
@@ -12,12 +13,39 @@ fn biword() -> String {
 }
 
 fn replacement(biword: &str) -> &str {
-    match &biword[..2] {
-        "bi" => "straight",
-        "Bi" => "Straight",
-        "BI" => "STRAIGHT",
-        "bI" => "sTrAiGhT",
-        _ => panic!("not a biword: {}", biword),
+    // ensure that we can recognize the “Bi” in “Bì…”
+    let mut chars = biword.nfd();
+    let b_uppercase;
+    loop {
+        match chars.next() {
+            Some(b) => {
+                if b == 'b' || b == 'B' {
+                    b_uppercase = b == 'B';
+                    break;
+                }
+                // TODO other chars
+            },
+            None => panic!("not a biword: {}", biword),
+        }
+    }
+    let i_uppercase;
+    loop {
+        match chars.next() {
+            Some(i) => {
+                if i == 'i' || i == 'I' {
+                    i_uppercase = i == 'I';
+                    break;
+                }
+                // TODO other chars
+            },
+            None => panic!("not a biword: {}", biword),
+        }
+    }
+    match (b_uppercase, i_uppercase) {
+        (false, false) => "straight",
+        (true, false) => "Straight",
+        (true, true) => "STRAIGHT",
+        (false, true) => "sTrAiGhT",
     }
 }
 
