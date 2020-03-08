@@ -1,6 +1,7 @@
 use std::io::BufReader;
 use std::io::BufRead;
 use std::fs::File;
+use rand::Rng;
 use rand::seq::IteratorRandom;
 use unicode_normalization::UnicodeNormalization;
 
@@ -16,7 +17,7 @@ fn is_vowel(c: char) -> bool {
     c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' || c == 'y'
 }
 
-pub fn replacement(biword: &str) -> String {
+pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
     // ensure that we can recognize the “Bi” in “Bì…”
     let mut chars = biword.nfd();
     // characters that occur before the “bi” (“-biotic” is a valid biword)
@@ -76,12 +77,13 @@ pub fn replacement(biword: &str) -> String {
             }
         }
     }
-    let bi_replacement = match (b_uppercase, i_uppercase) {
-        (false, false) => "straight",
-        (true, false) => "Straight",
-        (true, true) => "STRAIGHT",
-        (false, true) => "sTrAiGhT",
+    let (straight_replacement, hetero_replacement) = match (b_uppercase, i_uppercase) {
+        (false, false) => ("straight", "hetero"),
+        (true, false) => ("Straight", "Hetero"),
+        (true, true) => ("STRAIGHT", "HETERO"),
+        (false, true) => ("sTrAiGhT", "hEtErO"),
     };
+    let bi_replacement = if rng.gen_ratio(if vowel { 7 } else { 3 }, 10) { straight_replacement } else { hetero_replacement };
     let mut ret = String::with_capacity(biword.len() + ("straight".len() - "bi".len()));
     ret.push_str(&before_b);
     ret.push_str(&bi_replacement);
@@ -93,42 +95,65 @@ pub fn replacement(biword: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use core::u64;
+    use rand::rngs::mock;
+
+    fn static_bool_rng(b: bool) -> impl Rng {
+        mock::StepRng::new(if b { 0 } else { u64::MAX }, 0)
+    }
+
+    #[test]
+    #[ignore]
+    fn check_static_bool_rng() {
+        assert_eq!(true, static_bool_rng(true).gen_bool(0.5));
+        assert_eq!(false, static_bool_rng(false).gen_bool(0.5));
+        assert_eq!(true, static_bool_rng(true).gen_ratio(1, 2));
+        assert_eq!(false, static_bool_rng(false).gen_ratio(1, 2));
+    }
 
     #[test]
     fn replacement_lower_lower() {
-        assert_eq!(replacement("bi"), "straight");
-        assert_eq!(replacement("bisexual"), "straightsexual");
-        assert_eq!(replacement("-bi"), "-straight");
-        assert_eq!(replacement("bi-sexual"), "straight-sexual");
-        assert_eq!(replacement("bì"), "straight\u{300}");
-        assert_eq!(replacement("ḃi"), "straight");
+        let mut straight_rng = static_bool_rng(true);
+        let mut hetero_rng = static_bool_rng(false);
+        assert_eq!(replacement("bi", &mut straight_rng), "straight");
+        assert_eq!(replacement("bisexual", &mut hetero_rng), "heterosexual");
+        assert_eq!(replacement("-bi", &mut straight_rng), "-straight");
+        assert_eq!(replacement("bi-sexual", &mut hetero_rng), "hetero-sexual");
+        assert_eq!(replacement("bì", &mut straight_rng), "straight\u{300}");
+        assert_eq!(replacement("ḃi", &mut hetero_rng), "hetero");
     }
     #[test]
     fn replacement_upper_lower() {
-        assert_eq!(replacement("Bi"), "Straight");
-        assert_eq!(replacement("Bisexual"), "Straightsexual");
-        assert_eq!(replacement("-Bi"), "-Straight");
-        assert_eq!(replacement("Bi-Sexual"), "Straight-Sexual");
-        assert_eq!(replacement("Bì"), "Straight\u{300}");
-        assert_eq!(replacement("Ḃi"), "Straight");
+        let mut straight_rng = static_bool_rng(true);
+        let mut hetero_rng = static_bool_rng(false);
+        assert_eq!(replacement("Bi", &mut straight_rng), "Straight");
+        assert_eq!(replacement("Bisexual", &mut hetero_rng), "Heterosexual");
+        assert_eq!(replacement("-Bi", &mut straight_rng), "-Straight");
+        assert_eq!(replacement("Bi-Sexual", &mut hetero_rng), "Hetero-Sexual");
+        assert_eq!(replacement("Bì", &mut straight_rng), "Straight\u{300}");
+        assert_eq!(replacement("Ḃi", &mut hetero_rng), "Hetero");
     }
     #[test]
     fn replacement_lower_upper() {
-        assert_eq!(replacement("bI"), "sTrAiGhT");
-        assert_eq!(replacement("bIsExUaL"), "sTrAiGhTsExUaL");
-        assert_eq!(replacement("-bI"), "-sTrAiGhT");
-        assert_eq!(replacement("bI-sExUaL"), "sTrAiGhT-sExUaL");
-        assert_eq!(replacement("bÌ"), "sTrAiGhT\u{300}");
-        assert_eq!(replacement("ḃI"), "sTrAiGhT");
+        let mut straight_rng = static_bool_rng(true);
+        let mut hetero_rng = static_bool_rng(false);
+        assert_eq!(replacement("bI", &mut straight_rng), "sTrAiGhT");
+        assert_eq!(replacement("bIsExUaL", &mut hetero_rng), "hEtErOsExUaL");
+        assert_eq!(replacement("-bI", &mut straight_rng), "-sTrAiGhT");
+        assert_eq!(replacement("bI-sExUaL", &mut hetero_rng), "hEtErO-sExUaL");
+        assert_eq!(replacement("bÌ", &mut straight_rng), "sTrAiGhT\u{300}");
+        assert_eq!(replacement("ḃI", &mut hetero_rng), "hEtErO");
     }
     #[test]
     fn replacement_upper_upper() {
-        assert_eq!(replacement("BI"), "STRAIGHT");
-        assert_eq!(replacement("BISEXUAL"), "STRAIGHTSEXUAL");
-        assert_eq!(replacement("-BI"), "-STRAIGHT");
-        assert_eq!(replacement("BI-SEXUAL"), "STRAIGHT-SEXUAL");
-        assert_eq!(replacement("BÌ"), "STRAIGHT\u{300}");
-        assert_eq!(replacement("ḂI"), "STRAIGHT");
+        let mut straight_rng = static_bool_rng(true);
+        let mut hetero_rng = static_bool_rng(false);
+        assert_eq!(replacement("BI", &mut straight_rng), "STRAIGHT");
+        assert_eq!(replacement("BISEXUAL", &mut hetero_rng), "HETEROSEXUAL");
+        assert_eq!(replacement("-BI", &mut straight_rng), "-STRAIGHT");
+        assert_eq!(replacement("BI-SEXUAL", &mut hetero_rng), "HETERO-SEXUAL");
+        assert_eq!(replacement("BÌ", &mut straight_rng), "STRAIGHT\u{300}");
+        assert_eq!(replacement("ḂI", &mut hetero_rng), "HETERO");
     }
 
 }
