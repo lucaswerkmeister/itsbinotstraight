@@ -54,3 +54,42 @@ fn main() {
     let replacement = replacement(&biword);
     println!("{} → {}", biword, replacement);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn replacement_lower_lower() {
+        assert_eq!(replacement("bi"), "straight");
+        assert_eq!(replacement("bisexual"), "straight");
+        assert_eq!(replacement("-bi"), "straight");
+        assert_eq!(replacement("bì"), "straight");
+        assert_eq!(replacement("ḃi"), "straight");
+    }
+    #[test]
+    fn replacement_upper_lower() {
+        assert_eq!(replacement("Bi"), "Straight");
+        assert_eq!(replacement("Bisexual"), "Straight");
+        assert_eq!(replacement("-Bi"), "Straight");
+        assert_eq!(replacement("Bì"), "Straight");
+        assert_eq!(replacement("Ḃi"), "Straight");
+    }
+    #[test]
+    fn replacement_lower_upper() {
+        assert_eq!(replacement("bI"), "sTrAiGhT");
+        assert_eq!(replacement("bIsExUaL"), "sTrAiGhT");
+        assert_eq!(replacement("-bI"), "sTrAiGhT");
+        assert_eq!(replacement("bÌ"), "sTrAiGhT");
+        assert_eq!(replacement("ḃI"), "sTrAiGhT");
+    }
+    #[test]
+    fn replacement_upper_upper() {
+        assert_eq!(replacement("BI"), "STRAIGHT");
+        assert_eq!(replacement("BISEXUAL"), "STRAIGHT");
+        assert_eq!(replacement("-BI"), "STRAIGHT");
+        assert_eq!(replacement("BÌ"), "STRAIGHT");
+        assert_eq!(replacement("ḂI"), "STRAIGHT");
+    }
+
+}
