@@ -12,6 +12,10 @@ pub fn biword() -> String {
     lines.choose(&mut rng).expect("biwords empty")
 }
 
+fn is_vowel(c: char) -> bool {
+    c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' || c == 'y'
+}
+
 pub fn replacement(biword: &str) -> String {
     // ensure that we can recognize the “Bi” in “Bì…”
     let mut chars = biword.nfd();
@@ -57,11 +61,7 @@ pub fn replacement(biword: &str) -> String {
         match chars.next() {
             Some(c) => {
                 if c.is_alphanumeric() {
-                    if c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' || c == 'y' {
-                        vowel = false;
-                    } else {
-                        vowel = true;
-                    }
+                    vowel = is_vowel(c);
                     after_i.push(c);
                     break;
                 } else {
