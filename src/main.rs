@@ -11,6 +11,18 @@ fn biword() -> String {
     lines.choose(&mut rng).expect("biwords empty")
 }
 
+fn replacement(biword: &str) -> &str {
+    match &biword[..2] {
+        "bi" => "straight",
+        "Bi" => "Straight",
+        "BI" => "STRAIGHT",
+        "bI" => "sTrAiGhT",
+        _ => panic!("not a biword: {}", biword),
+    }
+}
+
 fn main() {
-    println!("{}", biword());
+    let biword = biword();
+    let replacement = replacement(&biword);
+    println!("{} → {}", biword, replacement);
 }
