@@ -1,8 +1,8 @@
-use std::io::BufReader;
-use std::io::BufRead;
-use std::fs::File;
-use rand::Rng;
 use rand::seq::IteratorRandom;
+use rand::Rng;
+use std::fs::File;
+use std::io::BufRead;
+use std::io::BufReader;
 use unicode_normalization::UnicodeNormalization;
 
 pub fn biword() -> String {
@@ -33,7 +33,7 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
                 } else {
                     before_b.push(b);
                 }
-            },
+            }
             None => panic!("not a biword: {}", biword),
         }
     }
@@ -50,7 +50,7 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
                 } else {
                     // could be a diacritic or something else; drop
                 }
-            },
+            }
             None => panic!("not a biword: {}", biword),
         }
     }
@@ -70,7 +70,7 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
                     // no stdlib way to distinguish AFAIK, keep for now
                     after_i.push(c);
                 }
-            },
+            }
             None => {
                 vowel = false;
                 break;
@@ -83,7 +83,11 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
         (true, true) => ("STRAIGHT", "HETERO"),
         (false, true) => ("sTrAiGhT", "hEtErO"),
     };
-    let bi_replacement = if rng.gen_ratio(if vowel { 7 } else { 3 }, 10) { straight_replacement } else { hetero_replacement };
+    let bi_replacement = if rng.gen_ratio(if vowel { 7 } else { 3 }, 10) {
+        straight_replacement
+    } else {
+        hetero_replacement
+    };
     let mut ret = String::with_capacity(biword.len() + ("straight".len() - "bi".len()));
     ret.push_str(&before_b);
     ret.push_str(&bi_replacement);
@@ -155,5 +159,4 @@ mod tests {
         assert_eq!(replacement("BÌ", &mut straight_rng), "STRAIGHT\u{300}");
         assert_eq!(replacement("ḂI", &mut hetero_rng), "HETERO");
     }
-
 }
