@@ -96,6 +96,36 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
     ret
 }
 
+pub fn phrase<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
+    let sample: f64 = rng.gen();
+    let (prefix, infix, suffix, conversion): (&str, &str, &str, Box<dyn Fn(&str) -> String>) =
+        if sample < 0.005 {
+            (
+                "IT’S 👏 ",
+                " 👏 NOT 👏 ",
+                " 👏",
+                Box::new(|s| s.to_uppercase()),
+            )
+        } else if sample < 0.015 {
+            ("IT’S ", " NOT ", "", Box::new(|s| s.to_uppercase()))
+        } else if sample < 0.04 {
+            ("make ", ", not ", "", Box::new(|s| String::from(s)))
+        } else if sample < 0.1 {
+            ("it’s “", "”\nnot “", "”", Box::new(|s| String::from(s)))
+        } else {
+            ("it’s ", " not ", "", Box::new(|s| String::from(s)))
+        };
+    let replacement = replacement(biword, rng);
+    let mut ret =
+        String::with_capacity(biword.len() + replacement.len() + "it’s ".len() + " not ".len());
+    ret.push_str(&prefix);
+    ret.push_str(&conversion(&biword));
+    ret.push_str(&infix);
+    ret.push_str(&conversion(&replacement));
+    ret.push_str(suffix);
+    ret
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -158,5 +188,22 @@ mod tests {
         assert_eq!(replacement("BI-SEXUAL", &mut hetero_rng), "HETERO-SEXUAL");
         assert_eq!(replacement("BÌ", &mut straight_rng), "STRAIGHT\u{300}");
         assert_eq!(replacement("ḂI", &mut hetero_rng), "HETERO");
+    }
+
+    #[test]
+    fn phrase_all_zeroes() {
+        let mut rng = mock::StepRng::new(0, 0);
+        assert_eq!(
+            phrase("bisexual", &mut rng),
+            "IT’S 👏 BISEXUAL 👏 NOT 👏 STRAIGHTSEXUAL 👏"
+        );
+    }
+    #[test]
+    fn phrase_all_ones() {
+        let mut rng = mock::StepRng::new(u64::MAX, 0);
+        assert_eq!(
+            phrase("bisexual", &mut rng),
+            "it’s bisexual not heterosexual"
+        );
     }
 }
