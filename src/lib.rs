@@ -109,11 +109,11 @@ pub fn phrase<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
         } else if sample < 0.015 {
             ("IT’S ", " NOT ", "", Box::new(str::to_uppercase))
         } else if sample < 0.04 {
-            ("make ", ", not ", "", Box::new(|s| String::from(s)))
+            ("make ", ", not ", "", Box::new(str::to_owned))
         } else if sample < 0.1 {
-            ("it’s “", "”\nnot “", "”", Box::new(|s| String::from(s)))
+            ("it’s “", "”\nnot “", "”", Box::new(str::to_owned))
         } else {
-            ("it’s ", " not ", "", Box::new(|s| String::from(s)))
+            ("it’s ", " not ", "", Box::new(str::to_owned))
         };
     let replacement = replacement(biword, rng);
     let mut ret =
