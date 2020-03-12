@@ -104,10 +104,10 @@ pub fn phrase<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
                 "IT’S 👏 ",
                 " 👏 NOT 👏 ",
                 " 👏",
-                Box::new(|s| s.to_uppercase()),
+                Box::new(str::to_uppercase),
             )
         } else if sample < 0.015 {
-            ("IT’S ", " NOT ", "", Box::new(|s| s.to_uppercase()))
+            ("IT’S ", " NOT ", "", Box::new(str::to_uppercase))
         } else if sample < 0.04 {
             ("make ", ", not ", "", Box::new(|s| String::from(s)))
         } else if sample < 0.1 {
