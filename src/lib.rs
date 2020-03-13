@@ -5,12 +5,11 @@ use std::io::BufRead;
 use std::io::BufReader;
 use unicode_normalization::UnicodeNormalization;
 
-pub fn biword() -> String {
+pub fn biword<R: Rng + ?Sized>(rng: &mut R) -> String {
     let file = File::open("biwords").expect("open biwords");
     let reader = BufReader::new(file);
     let lines = reader.lines().map(|l| l.expect("biwords lines"));
-    let mut rng = rand::thread_rng();
-    lines.choose(&mut rng).expect("biwords empty")
+    lines.choose(rng).expect("biwords empty")
 }
 
 fn is_vowel(c: char) -> bool {

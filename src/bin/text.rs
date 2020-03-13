@@ -1,5 +1,6 @@
 fn main() {
-    let biword = itsbinotstraight::biword();
-    let phrase = itsbinotstraight::phrase(&biword, &mut rand::thread_rng());
+    let mut rng = rand::thread_rng();
+    let biword = itsbinotstraight::biword(&mut rng);
+    let phrase = itsbinotstraight::phrase(&biword, &mut rng);
     println!("{}", phrase);
 }

@@ -8,8 +8,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         .access_token(&dotenv::var("TWITTER_TK")?)
         .secret_access_token(&dotenv::var("TWITTER_TS")?);
 
-    let biword = itsbinotstraight::biword();
-    let phrase = itsbinotstraight::phrase(&biword, &mut rand::thread_rng());
+    let mut rng = rand::thread_rng();
+    let biword = itsbinotstraight::biword(&mut rng);
+    let phrase = itsbinotstraight::phrase(&biword, &mut rng);
 
     let tweet = bot.tweet(&phrase, None)?;
     println!("https://twitter.com/status/status/{}", tweet.id());
