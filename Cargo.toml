@@ -3,6 +3,9 @@ name = "itsbinotstraight"
 version = "0.1.0"
 authors = ["Lucas Werkmeister <mail@lucaswerkmeister.de>"]
 edition = "2018"
+homepage = "https://twitter.com/ItsBiNotHetero"
+repository = "https://github.com/lucaswerkmeister/itsbinotstraight/"
+license = "AGPL-3.0-or-later"
 default-run = "itsbinotstraight"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
