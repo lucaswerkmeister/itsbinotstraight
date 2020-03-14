@@ -95,9 +95,11 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
     ret
 }
 
+type StringConversion = Box<dyn Fn(&str) -> String>;
+
 pub fn phrase<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
     let sample: f64 = rng.gen();
-    let (prefix, infix, suffix, conversion): (&str, &str, &str, Box<dyn Fn(&str) -> String>) =
+    let (prefix, infix, suffix, conversion): (&str, &str, &str, StringConversion) =
         if sample < 0.005 {
             (
                 "IT’S 👏 ",
