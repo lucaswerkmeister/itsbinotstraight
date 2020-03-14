@@ -1,0 +1,8 @@
+[Unit]
+Description=Send an “it’s bi not straight” tweet
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/node index.js
+WorkingDirectory=/usr/local/lib/itsbinotstraight/
+SyslogIdentifier=%N
