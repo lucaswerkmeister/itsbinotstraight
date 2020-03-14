@@ -82,11 +82,14 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
         (true, true) => ("STRAIGHT", "HETERO"),
         (false, true) => ("sTrAiGhT", "hEtErO"),
     };
-    let bi_replacement = if rng.gen_ratio(if vowel { 7 } else { 3 }, 10) {
+    let mut bi_replacement = String::from(if rng.gen_ratio(if vowel { 7 } else { 3 }, 10) {
         straight_replacement
     } else {
         hetero_replacement
-    };
+    });
+    if bi_replacement.chars().rev().next() == after_i.chars().next() {
+        bi_replacement.pop();
+    }
     let mut ret = String::with_capacity(biword.len() + ("straight".len() - "bi".len()));
     ret.push_str(&before_b);
     ret.push_str(&bi_replacement);
@@ -189,6 +192,17 @@ mod tests {
         assert_eq!(replacement("BI-SEXUAL", &mut hetero_rng), "HETERO-SEXUAL");
         assert_eq!(replacement("BÌ", &mut straight_rng), "STRAIGHT\u{300}");
         assert_eq!(replacement("ḂI", &mut hetero_rng), "HETERO");
+    }
+    #[test]
+    fn replacement_doubled_letter() {
+        let mut straight_rng = static_bool_rng(true);
+        let mut hetero_rng = static_bool_rng(false);
+        assert_eq!(replacement("biothing", &mut hetero_rng), "heterothing");
+        assert_eq!(replacement("bio", &mut hetero_rng), "hetero");
+        assert_eq!(replacement("BIOTHING", &mut hetero_rng), "HETEROTHING");
+        assert_eq!(replacement("bitrate", &mut straight_rng), "straightrate");
+        assert_eq!(replacement("bit", &mut straight_rng), "straight");
+        assert_eq!(replacement("BITRATE", &mut straight_rng), "STRAIGHTRATE");
     }
 
     #[test]
