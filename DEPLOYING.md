@@ -1,30 +1,26 @@
 # Deploying it’s bi not straight
 
-## TL;DR
+The bot can be deployed in two different ways, depending on if you’re deploying the Rust or JS version.
+In both cases, you build an OS image, sync it to the server, and then attach it;
+the images are built rather differently and there is a minor change in how to attach them, while the syncing step is identical.
+
+## Rust
+
+### TL;DR
 
 ```sh
-sudo mkosi -f &&
-sudo systemd-run --pty -p User="$USER" -p AmbientCapabilities=CAP_DAC_READ_SEARCH -p WorkingDirectory="$PWD" -E SSH_AUTH_SOCK="$SSH_AUTH_SOCK" casync make --without=user-names --store=luthien:/var/lib/casync/store/ luthien:/var/lib/portables/itsbinotstraight.caidx itsbinotstraight/ &&
-ssh -t luthien '
-sudo systemctl disable --now itsbinotstraight.timer &&
-sudo portablectl detach itsbinotstraight &&
-sudo casync extract --store=/var/lib/casync/store/ /var/lib/portables/itsbinotstraight.caidx /var/lib/portables/itsbinotstraight/ &&
-sudo portablectl attach --profile default-with-JIT itsbinotstraight &&
-sudo systemctl enable --now itsbinotstraight.timer
-'
+./deploy
 ```
 
-## Details
+### Details
 
-Build the image locally:
+Build the image locally.
+The [requirements for portable images](https://systemd.io/PORTABLE_SERVICES/#requirements-on-images) are pretty simple,
+so we can build a minimal image with a hand-written script:
 
 ```sh
-sudo mkosi -f
+sudo ./make-image
 ```
-
-An incremental build (`-i`) would potentially speed this up,
-but doesn’t work on my system,
-for reasons I can’t be bothered to investigate.
 
 Sync it to the server (see [this blog post](https://lucaswerkmeister.de/posts/2019/01/11/system-naming-scheme/) for background on the name):
 
@@ -53,9 +49,45 @@ Extract the image:
 sudo casync extract --store=/var/lib/casync/store/ /var/lib/portables/itsbinotstraight.caidx /var/lib/portables/itsbinotstraight/
 ```
 
-If the target directory already exists,
-`casync` should delete files not mentioned in the image on its own,
-but I haven’t tried that out yet.
+Attach the image again:
+
+```sh
+sudo portablectl attach itsbinotstraight && sudo systemctl enable --now itsbinotstraight.timer
+```
+
+Optionally check `systemctl list-timers` to see if we missed a post due to this deployment;
+if yes, run `systemctl start itsbinotstraight` to manually trigger a post.
+
+## JS
+
+### TL;DR
+
+```sh
+sudo mkosi -f &&
+sudo systemd-run --pty -p User="$USER" -p AmbientCapabilities=CAP_DAC_READ_SEARCH -p WorkingDirectory="$PWD" -E SSH_AUTH_SOCK="$SSH_AUTH_SOCK" casync make --without=user-names --store=luthien:/var/lib/casync/store/ luthien:/var/lib/portables/itsbinotstraight.caidx itsbinotstraight/ &&
+ssh -t luthien '
+sudo systemctl disable --now itsbinotstraight.timer &&
+sudo portablectl detach itsbinotstraight &&
+sudo casync extract --store=/var/lib/casync/store/ /var/lib/portables/itsbinotstraight.caidx /var/lib/portables/itsbinotstraight/ &&
+sudo portablectl attach --profile default-with-JIT itsbinotstraight &&
+sudo systemctl enable --now itsbinotstraight.timer
+'
+```
+
+## Details
+
+Build the image locally.
+The JS version needs a whole Node.js runtime, so we build a full image based on Arch Linux using [mkosi](https://github.com/systemd/mkosi/):
+
+```sh
+sudo mkosi -f
+```
+
+An incremental build (`-i`) would potentially speed this up,
+but doesn’t work on my system,
+for reasons I can’t be bothered to investigate.
+
+As above, sync it to the server, detach the old image, and extract the new one.
 
 Attach the image again:
 
@@ -63,5 +95,6 @@ Attach the image again:
 sudo portablectl attach --profile default-with-JIT itsbinotstraight && sudo systemctl enable --now itsbinotstraight.timer
 ```
 
-Optionally check `systemctl list-timers` to see if we missed a post due to this deployment;
-if yes, run `systemctl start itsbinotstraight` to manually trigger a post.
+Node.js needs to be able to create just-in-time compiled code, hence the custom profile which sets `MemoryDenyWriteExecute=no`.
+
+As above, optionally check if we missed a post.

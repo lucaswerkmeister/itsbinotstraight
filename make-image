@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# clean up any prior image and prepare new one
+sudo rm -rf itsbinotstraight
+install -d -m750 itsbinotstraight
+
+# build
+cargo build --release
+
+# install bot
+install -D -m755 target/release/tweet itsbinotstraight/usr/bin/itsbinotstraight
+install -D -m644 biwords .env -t itsbinotstraight/usr/lib/itsbinotstraight/ # note: .env must be world-readable, the binary will not be running as root (but the whole portable image isn’t world-readable so it’s okay)
+install -D -m644 itsbinotstraight.{service,timer} -t itsbinotstraight/usr/lib/systemd/system/
+
+# install dependencies because the binary isn’t completely static :/
+# discovered through ldd
+install -D -m755 /usr/lib/{libssl.so.1.1,libcrypto.so.1.1,libdl.so.2,libpthread.so.0,libgcc_s.so.1,libc.so.6,libm.so.6} -t itsbinotstraight/usr/lib/
+install -D -m755 /usr/lib64/ld-linux-x86-64.so.2 -t itsbinotstraight/usr/lib64/
+# discovered through strace
+install -D -m755 /usr/lib/{libnss_dns.so.2,libresolv.so.2,libnss_files.so.2} -t itsbinotstraight/usr/lib/
+
+# copy openssl config
+mkdir itsbinotstraight/etc/
+cp -a /etc/{ssl,ca-certificates} itsbinotstraight/etc/
+
+# install other portable service components
+cat > itsbinotstraight/usr/lib/os-release << 'EOF'
+NAME="It’s Bi Not Straight"
+ID=itsbinotstraight
+EOF
+install -D -m644 /dev/null itsbinotstraight/etc/resolv.conf
+install -D -m444 /dev/null itsbinotstraight/etc/machine-id
+install -d itsbinotstraight/{proc,sys,dev,run,tmp,var/tmp}/
+
+# make root-owned
+sudo chown -R root:root itsbinotstraight
