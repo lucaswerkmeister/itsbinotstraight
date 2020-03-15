@@ -6,6 +6,7 @@ ssh -t luthien '
 sudo systemctl disable --now itsbinotstraight.timer &&
 sudo portablectl detach itsbinotstraight &&
 sudo casync extract --store=/var/lib/casync/store/ /var/lib/portables/itsbinotstraight.caidx /var/lib/portables/itsbinotstraight/ &&
+sudo chmod 755 /var/lib/portables/itsbinotstraight/ &&
 sudo portablectl attach itsbinotstraight &&
 sudo systemctl enable --now itsbinotstraight.timer
 '

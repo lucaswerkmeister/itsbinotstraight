@@ -2,14 +2,14 @@
 
 # clean up any prior image and prepare new one
 sudo rm -rf itsbinotstraight
-install -d itsbinotstraight
+install -d -m750 itsbinotstraight
 
 # build
 cargo build --release
 
 # install bot
 install -D -m755 target/release/tweet itsbinotstraight/usr/bin/itsbinotstraight
-install -D -m644 biwords .env -t itsbinotstraight/usr/lib/itsbinotstraight/ # note: .env must be world-readable, the binary will not be running as root (but /var/lib/portables/ isn’t world-searchable so this should be fine after deployment)
+install -D -m644 biwords .env -t itsbinotstraight/usr/lib/itsbinotstraight/ # note: .env must be world-readable, the binary will not be running as root (but the whole portable image isn’t world-searchable so it’s okay)
 install -D -m644 units.rust/itsbinotstraight.{service,timer} -t itsbinotstraight/usr/lib/systemd/system/
 
 # install dependencies because the binary isn’t completely static :/

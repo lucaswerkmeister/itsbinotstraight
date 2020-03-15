@@ -49,6 +49,16 @@ Extract the image:
 sudo casync extract --store=/var/lib/casync/store/ /var/lib/portables/itsbinotstraight.caidx /var/lib/portables/itsbinotstraight/
 ```
 
+Make it world-searchable (`g+x`).
+Locally, we don’t want this, since there’s a world-readable `.env` inside the image;
+after deployment, however, that file is instead protected by all of `/var/lib/portables/` not being world-searchable,
+and the image itself must be world-searchable so that the unprivileged service can change directory into it
+(after having had the image bind-mounted into its mount namespace so it’s not affected by the mode of `/var/lib/portables/`):
+
+```sh
+sudo chmod 755 /var/lib/portables/itsbinotstraight/
+```
+
 Attach the image again:
 
 ```sh
@@ -69,6 +79,7 @@ ssh -t luthien '
 sudo systemctl disable --now itsbinotstraight.timer &&
 sudo portablectl detach itsbinotstraight &&
 sudo casync extract --store=/var/lib/casync/store/ /var/lib/portables/itsbinotstraight.caidx /var/lib/portables/itsbinotstraight/ &&
+sudo chmod 755 /var/lib/portables/itsbinotstraight/ &&
 sudo portablectl attach --profile default-with-JIT itsbinotstraight &&
 sudo systemctl enable --now itsbinotstraight.timer
 '
@@ -87,7 +98,7 @@ An incremental build (`-i`) would potentially speed this up,
 but doesn’t work on my system,
 for reasons I can’t be bothered to investigate.
 
-As above, sync it to the server, detach the old image, and extract the new one.
+As above, sync it to the server, detach the old image, extract the new one, and make it world-searchable.
 
 Attach the image again:
 
