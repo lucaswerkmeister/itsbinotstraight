@@ -11,8 +11,15 @@ const patterns = [
     // chance that this or one of the preceding patterns will be picked, pattern/phrase, optional conversion for biword and replacement
     [0.005, 'IT’S 👏 %BIWORD% 👏 NOT 👏 %REPLACEMENT% 👏', (s) => s.toUpperCase()],
     [0.015, 'IT’S %BIWORD% NOT %REPLACEMENT%', (s) => s.toUpperCase()],
-    [0.04, 'make %BIWORD%, not %REPLACEMENT%', null],
-    [0.1, 'it’s “%BIWORD%”\nnot “%REPLACEMENT%”', null],
+    [0.05, 'you must understand: it’s %BIWORD%, not %REPLACEMENT%', null],
+    [0.1, 'after all, it’s %BIWORD% not %REPLACEMENT%', null],
+    [0.2, 'you know what they say, it’s %BIWORD% not %REPLACEMENT%', null],
+    [0.3, 'as you know, it’s %BIWORD%, not %REPLACEMENT%', null],
+    [0.4, 'don’t forget – it’s %BIWORD%, not %REPLACEMENT%', null],
+    [0.5, 'always remember that it’s %BIWORD%, not %REPLACEMENT%', null],
+    [0.6, 'heads up it’s called %BIWORD% and not %REPLACEMENT%', null],
+    [0.7, 'it’s “%BIWORD%”\nnot “%REPLACEMENT%”', null],
+    [0.85, 'it’s %BIWORD% and not %REPLACEMENT%', null],
     [1, 'it’s %BIWORD% not %REPLACEMENT%', null],
 ];
 let biwords = undefined;

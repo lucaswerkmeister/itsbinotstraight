@@ -112,10 +112,49 @@ pub fn phrase<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
             )
         } else if sample < 0.015 {
             ("IT’S ", " NOT ", "", Box::new(str::to_uppercase))
-        } else if sample < 0.04 {
-            ("make ", ", not ", "", Box::new(str::to_owned))
+        } else if sample < 0.05 {
+            (
+                "you must understand: it’s",
+                ", not ",
+                "",
+                Box::new(str::to_owned),
+            )
         } else if sample < 0.1 {
+            ("after all, it’s ", " not ", "", Box::new(str::to_owned))
+        } else if sample < 0.2 {
+            (
+                "you know what they say, it’s ",
+                " not ",
+                "",
+                Box::new(str::to_owned),
+            )
+        } else if sample < 0.3 {
+            ("as you know, it’s ", ", not ", "", Box::new(str::to_owned))
+        } else if sample < 0.4 {
+            (
+                "don’t forget – it’s ",
+                ", not ",
+                "",
+                Box::new(str::to_owned),
+            )
+        } else if sample < 0.5 {
+            (
+                "always remember that it’s ",
+                ", not ",
+                "",
+                Box::new(str::to_owned),
+            )
+        } else if sample < 0.6 {
+            (
+                "heads up it’s called ",
+                " and not ",
+                "",
+                Box::new(str::to_owned),
+            )
+        } else if sample < 0.7 {
             ("it’s “", "”\nnot “", "”", Box::new(str::to_owned))
+        } else if sample < 0.85 {
+            ("it’s ", " and not ", "", Box::new(str::to_owned))
         } else {
             ("it’s ", " not ", "", Box::new(str::to_owned))
         };
