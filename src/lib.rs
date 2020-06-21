@@ -114,7 +114,7 @@ pub fn phrase<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
             ("IT’S ", " NOT ", "", Box::new(str::to_uppercase))
         } else if sample < 0.05 {
             (
-                "you must understand: it’s",
+                "you must understand: it’s ",
                 ", not ",
                 "",
                 Box::new(str::to_owned),
