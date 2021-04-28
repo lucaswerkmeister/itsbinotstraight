@@ -25,7 +25,7 @@ sudo ./make-image
 Sync it to the server (see [this blog post](https://lucaswerkmeister.de/posts/2019/01/11/system-naming-scheme/) for background on the name):
 
 ```sh
-sudo systemd-run --pty -p User="$USER" -p AmbientCapabilities=CAP_DAC_READ_SEARCH -p WorkingDirectory="$PWD" -E SSH_AUTH_SOCK="$SSH_AUTH_SOCK" casync make --without=user-names --store=luthien:/var/lib/casync/store/ luthien:/var/lib/portables/itsbinotstraight.caidx itsbinotstraight/
+sudo systemd-run --pty -p User="$USER" -p AmbientCapabilities=CAP_DAC_READ_SEARCH -p WorkingDirectory="$PWD" -E SSH_AUTH_SOCK="$SSH_AUTH_SOCK" casync make --without=user-names --store=galadriel:/var/lib/casync/store/ galadriel:/var/lib/portables/itsbinotstraight.caidx itsbinotstraight/
 ```
 
 `casync` needs to be able to read the entire OS tree (hence `CAP_DAC_READ_SEARCH`),
@@ -74,8 +74,8 @@ if yes, run `systemctl start itsbinotstraight` to manually trigger a post.
 
 ```sh
 sudo mkosi -f &&
-sudo systemd-run --pty -p User="$USER" -p AmbientCapabilities=CAP_DAC_READ_SEARCH -p WorkingDirectory="$PWD" -E SSH_AUTH_SOCK="$SSH_AUTH_SOCK" casync make --without=user-names --store=luthien:/var/lib/casync/store/ luthien:/var/lib/portables/itsbinotstraight.caidx itsbinotstraight/ &&
-ssh -t luthien '
+sudo systemd-run --pty -p User="$USER" -p AmbientCapabilities=CAP_DAC_READ_SEARCH -p WorkingDirectory="$PWD" -E SSH_AUTH_SOCK="$SSH_AUTH_SOCK" casync make --without=user-names --store=galadriel:/var/lib/casync/store/ galadriel:/var/lib/portables/itsbinotstraight.caidx itsbinotstraight/ &&
+ssh -t galadriel '
 sudo systemctl disable --now itsbinotstraight.timer &&
 sudo portablectl detach itsbinotstraight &&
 sudo casync extract --store=/var/lib/casync/store/ /var/lib/portables/itsbinotstraight.caidx /var/lib/portables/itsbinotstraight/ &&
