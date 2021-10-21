@@ -161,9 +161,9 @@ pub fn phrase<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
     let replacement = replacement(biword, rng);
     let mut ret =
         String::with_capacity(biword.len() + replacement.len() + "it’s ".len() + " not ".len());
-    ret.push_str(&prefix);
-    ret.push_str(&conversion(&biword));
-    ret.push_str(&infix);
+    ret.push_str(prefix);
+    ret.push_str(&conversion(biword));
+    ret.push_str(infix);
     ret.push_str(&conversion(&replacement));
     ret.push_str(suffix);
     ret
