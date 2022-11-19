@@ -12,6 +12,6 @@ default-run = "itsbinotstraight"
 
 [dependencies]
 dotenv = "0.15.0"
-rand = "0.7"
+rand = "0.8.5"
 rust_twitter_bot_lib = "0.1.2"
-unicode-normalization = "0.1.12"
+unicode-normalization = "0.1.22"
