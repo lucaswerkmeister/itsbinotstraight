@@ -2,8 +2,5 @@
 /.env
 /itsbinotstraight/
 
-# JS
-node_modules/
-
 # Rust
 /target/

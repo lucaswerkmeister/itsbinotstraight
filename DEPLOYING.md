@@ -1,18 +1,12 @@
 # Deploying it’s bi not straight
 
-The bot can be deployed in two different ways, depending on if you’re deploying the Rust or JS version.
-In both cases, you build an OS image, sync it to the server, and then attach it;
-the images are built rather differently and there is a minor change in how to attach them, while the syncing step is identical.
-
-## Rust
-
-### TL;DR
+## TL;DR
 
 ```sh
 ./deploy
 ```
 
-### Details
+## Details
 
 Build the image locally.
 The [requirements for portable images](https://systemd.io/PORTABLE_SERVICES/#requirements-on-images) are pretty simple,
@@ -67,45 +61,3 @@ sudo portablectl attach itsbinotstraight && sudo systemctl enable --now itsbinot
 
 Optionally check `systemctl list-timers` to see if we missed a post due to this deployment;
 if yes, run `systemctl start itsbinotstraight` to manually trigger a post.
-
-## JS
-
-### TL;DR
-
-```sh
-sudo mkosi -f &&
-sudo systemd-run --pty -p User="$USER" -p AmbientCapabilities=CAP_DAC_READ_SEARCH -p WorkingDirectory="$PWD" -E SSH_AUTH_SOCK="$SSH_AUTH_SOCK" casync make --without=user-names --store=galadriel:/var/lib/casync/store/ galadriel:/var/lib/portables/itsbinotstraight.caidx itsbinotstraight/ &&
-ssh -t galadriel '
-sudo systemctl disable --now itsbinotstraight.timer &&
-sudo portablectl detach itsbinotstraight &&
-sudo casync extract --store=/var/lib/casync/store/ /var/lib/portables/itsbinotstraight.caidx /var/lib/portables/itsbinotstraight/ &&
-sudo chmod 755 /var/lib/portables/itsbinotstraight/ &&
-sudo portablectl attach --profile default-with-JIT itsbinotstraight &&
-sudo systemctl enable --now itsbinotstraight.timer
-'
-```
-
-## Details
-
-Build the image locally.
-The JS version needs a whole Node.js runtime, so we build a full image based on Arch Linux using [mkosi](https://github.com/systemd/mkosi/):
-
-```sh
-sudo mkosi -f
-```
-
-An incremental build (`-i`) would potentially speed this up,
-but doesn’t work on my system,
-for reasons I can’t be bothered to investigate.
-
-As above, sync it to the server, detach the old image, extract the new one, and make it world-searchable.
-
-Attach the image again:
-
-```sh
-sudo portablectl attach --profile default-with-JIT itsbinotstraight && sudo systemctl enable --now itsbinotstraight.timer
-```
-
-Node.js needs to be able to create just-in-time compiled code, hence the custom profile which sets `MemoryDenyWriteExecute=no`.
-
-As above, optionally check if we missed a post.

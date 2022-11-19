@@ -1,4 +1,0 @@
-#!/bin/sh
-chmod o-x /
-export NODE_ENV=production
-make -C "$SRCDIR" all install

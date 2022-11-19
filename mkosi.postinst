@@ -1,4 +1,0 @@
-#!/bin/bash
-if [[ $1 == 'final' ]]; then
-    rm -r /usr/share/locale /usr/share/i18n /usr/share/man /usr/share/doc
-fi
