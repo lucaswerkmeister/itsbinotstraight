@@ -14,7 +14,7 @@ install -D -m644 units/itsbinotstraight.{service,timer} -t itsbinotstraight/usr/
 
 # install dependencies because the binary isn’t completely static :/
 # discovered through ldd
-install -D -m755 /usr/lib/{libssl.so.1.1,libcrypto.so.1.1,libdl.so.2,libpthread.so.0,libgcc_s.so.1,libc.so.6,libm.so.6} -t itsbinotstraight/usr/lib/
+install -D -m755 /usr/lib/{libssl.so.3,libcrypto.so.3,libdl.so.2,libpthread.so.0,libgcc_s.so.1,libc.so.6,libm.so.6} -t itsbinotstraight/usr/lib/
 install -D -m755 /usr/lib64/ld-linux-x86-64.so.2 -t itsbinotstraight/usr/lib64/
 # discovered through strace
 install -D -m755 /usr/lib/{libnss_dns.so.2,libresolv.so.2,libnss_files.so.2} -t itsbinotstraight/usr/lib/
