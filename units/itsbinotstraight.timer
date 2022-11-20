@@ -1,5 +1,5 @@
 [Unit]
-Description=Periodically send an “it’s bi not straight” tweet
+Description=Periodically send an “it’s bi not straight” post
 
 [Timer]
 OnCalendar=10,22:00 UTC

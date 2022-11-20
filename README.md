@@ -9,16 +9,16 @@ The bot is written in Rust.
 (An earlier version, which you can find in the Git history, was written in JS;
 it was mostly feature-identical, with minor differences in Unicode handling.)
 
-Run `cargo run` to generate a tweet text (without sending a tweet),
+Run `cargo run` to generate a post text (without sending a post),
 or `cargo test` to run unit tests.
 Cargo will automatically download and build dependencies as needed.
 
-`src/lib.rs` is the meat of the bot, generating the tweet texts.
-`src/main.rs`, the main binary (and default for `cargo run`), simply generates one tweet text and prints it out.
-`src/bin/tweet.rs` is the binary that actually sends a tweet,
+`src/lib.rs` is the meat of the bot, generating the post texts.
+`src/main.rs`, the main binary (and default for `cargo run`), simply generates one post text and prints it out.
+`src/bin/post.rs` is the binary that actually sends a post,
 loading credentials from the `.env` file or process environment,
 and the one that is deployed to the server.
-You can run it directly with `cargo run --bin tweet`.
+You can run it directly with `cargo run --bin post`.
 
 ## Deployment
 
@@ -33,7 +33,7 @@ See `.env.template` for the format.)
 Copy the resulting image (`itsbinotstraight/`) on some server into `/var/lib/portables/`,
 attach it e. g. with `portablectl attach -p trusted itsbinotstraight`
 and enable it with `systemctl enable --now itsbinotstraight.timer`.
-(You can also send a single tweet with `systemctl start itsbinotstraight.service` first, to see if it works.)
+(You can also send a single post with `systemctl start itsbinotstraight.service` first, to see if it works.)
 
 See also `DEPLOYING.md`.
 

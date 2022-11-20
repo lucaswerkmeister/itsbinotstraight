@@ -8,7 +8,7 @@ install -d -m750 itsbinotstraight
 cargo build --release
 
 # install bot
-install -D -m755 target/release/tweet itsbinotstraight/usr/bin/itsbinotstraight
+install -D -m755 target/release/post itsbinotstraight/usr/bin/itsbinotstraight
 install -D -m644 biwords .env -t itsbinotstraight/usr/lib/itsbinotstraight/ # note: .env must be world-readable, the binary will not be running as root (but the whole portable image isn’t world-searchable so it’s okay)
 install -D -m644 units/itsbinotstraight.{service,timer} -t itsbinotstraight/usr/lib/systemd/system/
 
