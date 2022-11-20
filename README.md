@@ -22,7 +22,7 @@ You can run it directly with `cargo run --bin post`.
 
 ## Deployment
 
-Build an image suitable as a [portable service](https://systemd.io/PORTABLE_SERVICES.html), using `./make-image`.
+Build an image suitable as a [portable service](https://systemd.io/PORTABLE_SERVICES/), using `./make-image`.
 An `.env` file with valid credentials must exist at image build time
 and will be included in the image.
 (The credentials are sensitive,
