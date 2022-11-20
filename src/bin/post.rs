@@ -5,6 +5,7 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::error::Error;
 
+#[allow(clippy::or_fun_call)]
 fn main() -> Result<(), Box<dyn Error>> {
     let mut rng = rand::thread_rng();
     let biword = itsbinotstraight::biword(&mut rng);
@@ -19,7 +20,7 @@ fn tweet(text: &str) -> Result<(), Box<dyn Error>> {
         .consumer_secret_key(&dotenv::var("TWITTER_CS")?)
         .access_token(&dotenv::var("TWITTER_TK")?)
         .secret_access_token(&dotenv::var("TWITTER_TS")?);
-    let tweet = bot.tweet(&text, None)?;
+    let tweet = bot.tweet(text, None)?;
     println!("https://twitter.com/status/status/{}", tweet.id());
     Ok(())
 }
