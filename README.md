@@ -7,7 +7,7 @@ posting riffs on the “it’s the bible not the straightble” joke.
 
 The bot is written in Rust.
 (An earlier version, which you can find in the Git history, was written in JS;
-it was mostly feature-identical, with minor differences in Unicode handling.)
+it was mostly feature-identical at the time it was removed, with minor differences in Unicode handling.)
 
 Run `cargo run` to generate a post text (without sending a post),
 or `cargo test` to run unit tests.
