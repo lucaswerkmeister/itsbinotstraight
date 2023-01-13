@@ -31,7 +31,7 @@ and you should not distribute the image containing them.
 See `.env.template` for the format.)
 
 Copy the resulting image (`itsbinotstraight/`) on some server into `/var/lib/portables/`,
-attach it e. g. with `portablectl attach -p trusted itsbinotstraight`
+attach it e. g. with `portablectl attach itsbinotstraight`
 and enable it with `systemctl enable --now itsbinotstraight.timer`.
 (You can also send a single post with `systemctl start itsbinotstraight.service` first, to see if it works.)
 
