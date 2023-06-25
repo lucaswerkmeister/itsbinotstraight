@@ -1,13 +1,14 @@
 # it’s bi not straight
 
-A [Mastodon](https://botsin.space/@ItsBiNotStraight) and [Twitter bot](https://twitter.com/ItsBiNotHetero)
+A [Mastodon bot](https://botsin.space/@ItsBiNotStraight)
 posting riffs on the “it’s the bible not the straightble” joke.
+(Formerly also a [Twitter bot](https://twitter.com/ItsBiNotHetero).)
 
 ## Development
 
 The bot is written in Rust.
 (An earlier version, which you can find in the Git history, was written in JS;
-it was mostly feature-identical at the time it was removed, with minor differences in Unicode handling.)
+it only supported Twitter and had minor differences in Unicode handling.)
 
 Run `cargo run` to generate a post text (without sending a post),
 or `cargo test` to run unit tests.

@@ -1,6 +1,5 @@
 use reqwest::blocking::Client;
 use reqwest::header;
-use rust_twitter_bot_lib::TwitterBot;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::error::Error;
@@ -11,18 +10,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let biword = itsbinotstraight::biword(&mut rng);
     let phrase = itsbinotstraight::phrase(&biword, &mut rng);
 
-    toot(&phrase).or(tweet(&phrase))
-}
-
-fn tweet(text: &str) -> Result<(), Box<dyn Error>> {
-    let bot = TwitterBot::new()
-        .consumer_key(&dotenv::var("TWITTER_CK")?)
-        .consumer_secret_key(&dotenv::var("TWITTER_CS")?)
-        .access_token(&dotenv::var("TWITTER_TK")?)
-        .secret_access_token(&dotenv::var("TWITTER_TS")?);
-    let tweet = bot.tweet(text, None)?;
-    println!("https://twitter.com/status/status/{}", tweet.id());
-    Ok(())
+    toot(&phrase)
 }
 
 #[derive(Deserialize)]
