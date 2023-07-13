@@ -87,7 +87,7 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
     } else {
         hetero_replacement
     });
-    if bi_replacement.chars().rev().next() == after_i.chars().next() {
+    if bi_replacement.chars().next_back() == after_i.chars().next() {
         bi_replacement.pop();
     }
     let mut ret = String::with_capacity(biword.len() + ("straight".len() - "bi".len()));
@@ -182,10 +182,10 @@ mod tests {
     #[test]
     #[ignore]
     fn check_static_bool_rng() {
-        assert_eq!(true, static_bool_rng(true).gen_bool(0.5));
-        assert_eq!(false, static_bool_rng(false).gen_bool(0.5));
-        assert_eq!(true, static_bool_rng(true).gen_ratio(1, 2));
-        assert_eq!(false, static_bool_rng(false).gen_ratio(1, 2));
+        assert!(static_bool_rng(true).gen_bool(0.5));
+        assert!(!static_bool_rng(false).gen_bool(0.5));
+        assert!(static_bool_rng(true).gen_ratio(1, 2));
+        assert!(!static_bool_rng(false).gen_ratio(1, 2));
     }
 
     #[test]
