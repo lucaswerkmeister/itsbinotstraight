@@ -4,7 +4,6 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::error::Error;
 
-#[allow(clippy::or_fun_call)]
 fn main() -> Result<(), Box<dyn Error>> {
     let mut rng = rand::thread_rng();
     let biword = itsbinotstraight::biword(&mut rng);
