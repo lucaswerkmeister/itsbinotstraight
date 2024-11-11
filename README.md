@@ -1,8 +1,9 @@
 # it’s bi not straight
 
-A [Mastodon bot](https://botsin.space/@ItsBiNotStraight)
+A [Mastodon bot](https://fox.nexus/@ItsBiNotStraight)
 posting riffs on the “it’s the bible not the straightble” joke.
-(Formerly also a [Twitter bot](https://twitter.com/ItsBiNotHetero).)
+(Formerly a [different Mastodon bot](https://botsin.space/@ItsBiNotStraight)
+and before then also a [Twitter bot](https://twitter.com/ItsBiNotHetero).)
 
 ## Development
 
