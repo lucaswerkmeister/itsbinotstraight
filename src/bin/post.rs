@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let biword = itsbinotstraight::biword(&mut rng);
     let phrase = itsbinotstraight::phrase(&biword, &mut rng);
 

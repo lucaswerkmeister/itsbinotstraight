@@ -82,7 +82,7 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
         (true, true) => ("STRAIGHT", "HETERO"),
         (false, true) => ("sTrAiGhT", "hEtErO"),
     };
-    let mut bi_replacement = String::from(if rng.gen_ratio(if vowel { 7 } else { 3 }, 10) {
+    let mut bi_replacement = String::from(if rng.random_ratio(if vowel { 7 } else { 3 }, 10) {
         straight_replacement
     } else {
         hetero_replacement
@@ -101,7 +101,7 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
 type StringConversion = Box<dyn Fn(&str) -> String>;
 
 pub fn phrase<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
-    let sample: f64 = rng.gen();
+    let sample: f64 = rng.random();
     let (prefix, infix, suffix, conversion): (&str, &str, &str, StringConversion) =
         if sample < 0.005 {
             (
@@ -182,10 +182,10 @@ mod tests {
     #[test]
     #[ignore]
     fn check_static_bool_rng() {
-        assert!(static_bool_rng(true).gen_bool(0.5));
-        assert!(!static_bool_rng(false).gen_bool(0.5));
-        assert!(static_bool_rng(true).gen_ratio(1, 2));
-        assert!(!static_bool_rng(false).gen_ratio(1, 2));
+        assert!(static_bool_rng(true).random_bool(0.5));
+        assert!(!static_bool_rng(false).random_bool(0.5));
+        assert!(static_bool_rng(true).random_ratio(1, 2));
+        assert!(!static_bool_rng(false).random_ratio(1, 2));
     }
 
     #[test]
