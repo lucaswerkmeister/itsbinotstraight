@@ -2,7 +2,7 @@
 name = "itsbinotstraight"
 version = "0.1.0"
 authors = ["Lucas Werkmeister <mail@lucaswerkmeister.de>"]
-edition = "2021"
+edition = "2024"
 homepage = "https://fox.nexus/@ItsBiNotStraight"
 repository = "https://github.com/lucaswerkmeister/itsbinotstraight/"
 license = "AGPL-3.0-or-later"

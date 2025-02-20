@@ -1,5 +1,5 @@
-use rand::seq::IteratorRandom;
 use rand::Rng;
+use rand::seq::IteratorRandom;
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
