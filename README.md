@@ -3,7 +3,7 @@
 A [Mastodon bot](https://fox.nexus/@ItsBiNotStraight)
 posting riffs on the “it’s the bible not the straightble” joke.
 (Formerly a [different Mastodon bot](https://botsin.space/@ItsBiNotStraight)
-and before then also a [Twitter bot](https://twitter.com/ItsBiNotHetero).)
+and before then also a [Twitter bot](https://twitter.lucaswerkmeister.de/ItsBiNotHetero/).)
 
 ## Development
 
