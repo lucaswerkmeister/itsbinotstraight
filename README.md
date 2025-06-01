@@ -5,6 +5,12 @@ posting riffs on the “it’s the bible not the straightble” joke.
 (Formerly a [different Mastodon bot](https://botsin.space/@ItsBiNotStraight)
 and before then also a [Twitter bot](https://twitter.lucaswerkmeister.de/ItsBiNotHetero/).)
 
+## Word list
+
+The [word list](./biwords) was imported from English Wiktionary in December 2019.
+Occasionally, words are removed from it if they turn out to be inappropriate.
+Feel free to contact the bot operator or send a pull request if you think a word should be removed.
+
 ## Development
 
 The bot is written in Rust.
