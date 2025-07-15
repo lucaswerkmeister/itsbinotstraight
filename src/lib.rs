@@ -33,7 +33,7 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
                     before_b.push(b);
                 }
             }
-            None => panic!("not a biword: {}", biword),
+            None => panic!("not a biword: {biword}"),
         }
     }
     // whether the “i” is uppercase or not
@@ -45,12 +45,12 @@ pub fn replacement<R: Rng + ?Sized>(biword: &str, rng: &mut R) -> String {
                     i_uppercase = i == 'I';
                     break;
                 } else if i.is_alphanumeric() {
-                    panic!("not a biword: {}", biword);
+                    panic!("not a biword: {biword}");
                 } else {
                     // could be a diacritic or something else; drop
                 }
             }
-            None => panic!("not a biword: {}", biword),
+            None => panic!("not a biword: {biword}"),
         }
     }
     // characters that occur after the “bi” (only as far as we’ve consumed chars)
